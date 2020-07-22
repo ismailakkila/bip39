@@ -1,0 +1,11 @@
+dist: "xenial"
+language: "python"
+python:
+  - "3.6.2"
+install:
+  - "pip install -r requirements.txt"
+before-script:
+  - "pylint bip39.py"
+  - "pylint bip39_helper.py"
+script:
+  - "pytest --verbose bip39_test.py"
