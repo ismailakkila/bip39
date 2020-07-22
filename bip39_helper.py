@@ -1,15 +1,21 @@
+"""This module contains BIP39 helper functions"""
+
 import hashlib
 
-def sha256(s):
-    return hashlib.sha256(s).digest()
+N = (2**256) - (2**32) - 977
+
+def sha256(payload):
+    """This function returns the sha256 of the provided payload"""
+    return hashlib.sha256(payload).digest()
 
 
 def num_groups_1(payload):
+    """This function returns the a list of 24 numbers representing the payload"""
     num_bits = len(payload) * 8
     num_groups = []
     payload_num = int.from_bytes(payload, 'big')
     iterations = num_bits // 11
-    for i in range(iterations):
+    for _ in range(iterations):
         num = payload_num >> num_bits - 11 & 2047
         num_groups.append(num)
         payload_num <<= 11
@@ -18,10 +24,11 @@ def num_groups_1(payload):
 
 
 def num_groups_2(payload):
+    """This function returns the a list of 24 numbers representing the payload"""
     num_groups = []
     read_count = 0
     num = 0
-    for byte in secret_bytes_checksum:
+    for byte in payload:
         bit = 0
         while bit < 8:
             bit_enabled = byte & 128 == 128
@@ -39,6 +46,10 @@ def num_groups_2(payload):
 
 
 def to_word_groups(num_groups):
+    """
+    This function returns the a list of 24 words from a list of 24 numbers
+    representing the payload
+    """
     with open('wordlist.txt', 'rb') as (file):
         words = file.readlines()
     words = [word.strip().decode('utf8') for word in words]
@@ -47,6 +58,10 @@ def to_word_groups(num_groups):
 
 
 def to_num_groups(word_groups):
+    """
+    This function returns the a list of 24 numbers from a list of 24 words
+    representing the payload
+    """
     with open('wordlist.txt', 'rb') as (file):
         words = file.readlines()
     words = [word.decode('utf8').strip() for word in words]
@@ -55,6 +70,10 @@ def to_num_groups(word_groups):
 
 
 def to_num_groups_from_file(filename):
+    """
+    This function returns the a list of 24 numbers from a file containing 24
+    words (one per line) representing the payload
+    """
     with open('wordlist.txt', 'rb') as (file):
         words = file.readlines()
     words = [word.decode('utf8').strip() for word in words]

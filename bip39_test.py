@@ -1,17 +1,17 @@
+from os import path, remove
 from secrets import randbelow
+import pytest
 from bip39 import Mnemonic
 from bip39_helper import N, sha256
-from os import path, remove
-import pytest
 
 MNEMONIC_SECRET = randbelow(N)
 MNEMONIC_FILENAME = "mnemonic_unit_test"
 
 @pytest.fixture
 def mnemonic():
-    m = Mnemonic(MNEMONIC_SECRET)
-    print(m)
-    return m
+    m_random = Mnemonic(MNEMONIC_SECRET)
+    print(m_random)
+    return m_random
 
 def test_mnemonic_structure(mnemonic):
     assert mnemonic.secret < N
@@ -25,20 +25,19 @@ def test_write_to_file(mnemonic):
     assert path.isfile(MNEMONIC_FILENAME) == True
 
 def test_parse_from_file(mnemonic):
-    m = Mnemonic.parse_from_file(MNEMONIC_FILENAME)
-    assert m.secret == mnemonic.secret
-    assert m.checksum == mnemonic.checksum
-    assert m.num_groups == mnemonic.num_groups
-    assert m.word_groups == mnemonic.word_groups
+    m_random = Mnemonic.parse_from_file(MNEMONIC_FILENAME)
+    assert m_random.secret == mnemonic.secret
+    assert m_random.checksum == mnemonic.checksum
+    assert m_random.num_groups == mnemonic.num_groups
+    assert m_random.word_groups == mnemonic.word_groups
 
 def test_parse(mnemonic):
-    m = Mnemonic.parse(mnemonic.word_groups)
-    assert m.secret == mnemonic.secret
-    assert m.checksum == mnemonic.checksum
-    assert m.num_groups == mnemonic.num_groups
-    assert m.word_groups == mnemonic.word_groups
+    m_random = Mnemonic.parse(mnemonic.word_groups)
+    assert m_random.secret == mnemonic.secret
+    assert m_random.checksum == mnemonic.checksum
+    assert m_random.num_groups == mnemonic.num_groups
+    assert m_random.word_groups == mnemonic.word_groups
 
-def test_delete_file(mnemonic):
+def test_delete_file():
     remove(MNEMONIC_FILENAME)
-    assert path.isfile(MNEMONIC_FILENAME) == False
-
+    assert not path.isfile(MNEMONIC_FILENAME)
