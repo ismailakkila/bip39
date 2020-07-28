@@ -12,7 +12,9 @@ pip install -r requirements
 
 **Create a mnemonic 24-word instance with a secret**
 ```
+from bip39 import Mnemonic
 from secrets import randbelow
+
 MNEMONIC_SECRET = randbelow(N)
 m_random = Mnemonic(MNEMONIC_SECRET)
 print(m_random)
